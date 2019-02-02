@@ -172,6 +172,8 @@ namespace iep.Controllers
            
             if(Session["Admin"]!=null || Session["User"]==null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if(user.Email==null || user.LastName==null || user.FirstName==null)
+                 return View(user);
             log.Info("Edit user " + ((User)Session["User"]).Id);
             var id = ((User)Session["User"]).Id;
             if (!db.Users.Any(x => x.Email == user.Email && x.Id != id))
@@ -246,7 +248,9 @@ namespace iep.Controllers
         public ActionResult ChangeParameters([Bind(Include = "DefaultNumPageAuctions,DefaultAuctionTime,SilverPackage,GoldPackage,PlatinumPackage,Currency,PriceOfToken")]SystemParameter param) {
             if (Session["Admin"] == null || Session["User"] != null || (bool)Session["Admin"] != true)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            param.Id = 1;
+            if (param.DefaultNumPageAuctions<1 || param.DefaultAuctionTime<0 || param.SilverPackage==0 || param.GoldPackage==0 || param.PlatinumPackage==0 || param.Currency=="" || param.PriceOfToken<1 )
+                return View(param);
+           param.Id = 1;
             db.Entry(param).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index", "Manage");
