@@ -248,8 +248,7 @@ namespace iep.Controllers
         public ActionResult ChangeParameters([Bind(Include = "DefaultNumPageAuctions,DefaultAuctionTime,SilverPackage,GoldPackage,PlatinumPackage,Currency,PriceOfToken")]SystemParameter param) {
             if (Session["Admin"] == null || Session["User"] != null || (bool)Session["Admin"] != true)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            if (param.DefaultNumPageAuctions<1 || param.DefaultAuctionTime<0 || param.SilverPackage==0 || param.GoldPackage==0 || param.PlatinumPackage==0 || param.Currency=="" || param.PriceOfToken<1 )
-                return View(param);
+          
            param.Id = 1;
             db.Entry(param).State = EntityState.Modified;
             db.SaveChanges();
